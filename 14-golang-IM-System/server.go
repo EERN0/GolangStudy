@@ -22,7 +22,6 @@ func NewServer(ip string, port int) *Server {
 func (this *Server) Handler(conn net.Conn) {
 	// ...当前连接的业务
 	fmt.Println("链接建立成功")
-	fmt.Println("hello!")
 }
 
 // 启动服务器接口
