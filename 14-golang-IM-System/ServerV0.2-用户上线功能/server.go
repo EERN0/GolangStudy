@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net"
 	"sync"
 )
@@ -57,33 +56,15 @@ func (serv *Server) Handler(conn net.Conn) {
 	// ...当前连接的业务
 	// fmt.Println("链接建立成功")
 
-	user := NewUser(conn, serv)
+	user := NewUser(conn)
 
-	// 用户上线
-	user.Online()
+	// 用户上线，将用户加入到onlineMap中
+	serv.mapLock.Lock()
+	serv.OnlineMap[user.Name] = user // 多用户操作同一个map，互斥访问
+	serv.mapLock.Unlock()
 
-	// 接收客户端发送的消息
-	go func() {
-		buf := make([]byte, 4096)
-		for {
-			n, err := conn.Read(buf)
-			if n == 0 { // 读取到的字符个数为0
-				user.Offline() // 用户下线
-				return
-			}
-
-			if err != nil && err != io.EOF {
-				fmt.Println("Conn Read err: ", err)
-				return
-			}
-
-			// 提取用户的消息（去除'\n'）
-			msg := string(buf[:n-1])
-
-			// 发给用户处理消息模块来处理消息，用户的业务和服务端没关系
-			user.DoMessage(msg)
-		}
-	}()
+	// 广播当前用户上线消息
+	serv.BroadCast(user, "已上线")
 
 	// 当前handler阻塞
 	select {}
