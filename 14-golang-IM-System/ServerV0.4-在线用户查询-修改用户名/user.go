@@ -99,17 +99,6 @@ func (user *User) DoMessage(msg string) {
 			user.Name = newName
 			user.SendMsg("修改用户名成功:" + user.Name + "\n")
 		}
-	} else if  len(msg) > 4 && msg[:3] == "to|"{	// 私聊，消息格式： to|张三|消息内容
-		// 1.获取对方的用户名
-		remoteName := strings.Split(msg, "|")[1]
-		if remoteName == "" {
-			user.SendMsg("消息格式不正确，请使用\"to|张三|消息内容"")
-		}
-
-		// 2.根据用户名 得到对象User对象
-
-		// 3.获取消息内容,通过对方的User对象将消息内容发送过去
-		
 	} else {
 		user.server.BroadCast(user, msg)
 	}

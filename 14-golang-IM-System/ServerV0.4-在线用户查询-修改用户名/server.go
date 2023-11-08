@@ -5,7 +5,6 @@ import (
 	"io"
 	"net"
 	"sync"
-	"time"
 )
 
 /*
@@ -63,16 +62,13 @@ func (serv *Server) Handler(conn net.Conn) {
 	// 用户上线
 	user.Online()
 
-	// 监听用户是否活跃的channel
-	isAlive := make(chan bool)
-
 	// 接收客户端(用户)发送的消息
 	go func() {
 		buf := make([]byte, 4096)
 		for {
 			n, err := conn.Read(buf)
-			if n == 0 { // 读取到的字符个数为0
-				user.Offline() // 用户下线
+			if n == 0 { 		// 读取到的字符个数为0
+				user.Offline()  // 用户下线
 				return
 			}
 
@@ -84,34 +80,13 @@ func (serv *Server) Handler(conn net.Conn) {
 			// 提取用户的消息（去除'\n'）
 			msg := string(buf[:n-1])
 
-			// 发给用户的消息处理模块来处理消息，用户的业务(和服务端没关系)
+			// 发给用户处理消息模块来处理消息，用户的业务(和服务端没关系)
 			user.DoMessage(msg)
-
-			// 有用户消息传到服务器，表明该用户是活跃的
-			isAlive <- true
 		}
 	}()
 
-	// 超时强踢功能，添加定时器功能
-	// select{} 让当前handler阻塞
-	for {
-		select {
-		case <- isAlive:	// isAlive管道中有值，表明当前用户是活跃的，用来重置定时器
-			// isAlive管道中没有值，select阻塞，20s后，下面的管道就会有值，触发下面的case
-		case <-time.After(time.Second * 20):	// time.After()是一个channel, 20s之后就有数据了
-			// 20s之后，isAlive还没有数据，表明已经超时, 将当前user强制关闭
-			user.SendMsg("你被踢了")
-
-			// 销毁用户资源
-			close(user.C)
-
-			// 关闭连接
-			conn.Close()
-			
-			// 退出当前go程
-			return		// 或者用 runtime.Goexit()
-		}
-	}
+	// 当前handler阻塞
+	select {}
 }
 
 // 启动服务器接口
