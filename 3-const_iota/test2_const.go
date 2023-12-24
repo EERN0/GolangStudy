@@ -1,4 +1,7 @@
-// 常量
+// 常量 -- const
+// iota配合const使用，实现自增
+// 常量不能用 := 语法声明
+
 package main
 
 import (
@@ -6,7 +9,8 @@ import (
 )
 
 // const来定义枚举类型
-// iota只能出现在const()中，只有在const有累加效果，iota【每一行】累加1
+// iota只能和const配合使用
+// 在const(...)里面有累加效果，iota【每一行】累加1
 const (
 	// 可以在const中添加一个关键字iota，[每行]iota累加1，第一行的iota的默认值是0
 	BeiJing  = 10 * iota // iota = 0, BeiJing = 10*0
@@ -24,10 +28,12 @@ const (
 )
 
 func main() {
-	const length = 10
-
+	const length = 10 // 常量不允许修改
 	fmt.Println("length = ", length)
-	// length = 100		// 常量不允许修改
+
+	// const Truth := true	报错,const不能用:=声明变量
+	const Truth = true
+	fmt.Println("Truth:", Truth)
 
 	fmt.Println("====================")
 
@@ -44,4 +50,10 @@ func main() {
 	// iota只能配合const()一起使用，iota只有在const有累加效果
 	// var a int = iota			// 报错
 	// fmt.Println(a)
+
+	const aaa = 100 * iota
+	fmt.Println(aaa) // 0
+
+	const bbb = 100 * iota
+	fmt.Println(bbb) // 0
 }
