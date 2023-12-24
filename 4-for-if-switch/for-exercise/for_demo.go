@@ -18,8 +18,14 @@ func main1() {
 	}
 	fmt.Println(sum) //10100
 
-	// 死循环，省略判断条件
-	for {
-		//...
+	// // 死循环，省略判断条件
+	// for {
+	// 	//...
+	// }
+
+	// 基于范围的遍历
+	slice1 := []int{1, 2, 3}
+	for idx := range slice1 {
+		fmt.Println("index:", idx, "value:", slice1[idx])
 	}
 }

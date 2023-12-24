@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+// Go中没有指针运算
 func swap(a, b *int) {
 	temp := *a
 	*a = *b

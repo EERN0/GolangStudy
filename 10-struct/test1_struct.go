@@ -22,13 +22,13 @@ func main1() {
 	book1.title = "golang"
 	book1.author = "zhang3"
 
-	fmt.Printf("%v\n", book1)		// {golang zhang3}
-	
-	changeBook(book1)	// 值传递，只改变副本
+	fmt.Printf("%v\n", book1) // {golang zhang3}
 
-	fmt.Printf("%v\n", book1)		// {golang zhang3}
-	
-	changeBook2(&book1)	// 传指针
+	changeBook(book1) // 值传递，只改变副本
 
-	fmt.Printf("%v\n", book1)		// {golang 555}
+	fmt.Printf("%v\n", book1) // {golang zhang3}
+
+	changeBook2(&book1) // 传指针
+
+	fmt.Printf("%v\n", book1) // {golang 555}
 }
